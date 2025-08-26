@@ -25,6 +25,10 @@ SECRET_KEY = 'django-insecure--n$i3w7@tf^pci0$i0_g7-4_k6!n6y8@-jp#egh-r1mv-y4xc@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://expense-tracker-cf9t.onrender.com"
+]
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -45,10 +49,11 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'expense_tracker.urls'
 
@@ -117,8 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')     # where collectstatic will put files in production
+
 
 
 # MEDIA FILES

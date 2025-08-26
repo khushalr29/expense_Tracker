@@ -1,5 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Expense
+from .models import login
+
+def Login(request):
+    if request.method =="POST":
+        Data = request.POST
+        Name =Data.get('Name')
+        Email= Data.get('Email')
+        Password =Data.get('Password')
+        login.objects.create(Name=Name ,Email=Email,Password=Password)
+        return redirect('/home/')
+    return render(request,"expenses/login_page.html",{'Page':'Login'})
+
+
 
 # CREATE & READ
 def view_expenses(request):

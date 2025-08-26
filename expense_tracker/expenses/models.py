@@ -1,5 +1,10 @@
 from django.db import models
 
+class login(models.Model):
+    Name =models.CharField(max_length=250)
+    Email =models.EmailField()
+    Password=models.CharField(max_length=16)
+
 class Expense(models.Model):
     CATEGORY_CHOICES = [
         ('Food', 'Food'),

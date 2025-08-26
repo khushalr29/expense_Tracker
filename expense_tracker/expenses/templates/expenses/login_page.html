@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block login %}
+
+<h2  id="title" class=" col-6 mx-auto p-2">💰Welcome to Expense Tracker App!💰</h2>
+<div class="container align-center mt-5 ">
+    <form class="col-6 mx-auto card p-3 shadow-lg" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="name" class="form-label">Name :-)</label>
+            <input type="text" required name="Name" class="form-control">
+        </div>
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Email address -: </label>
+    <input type="email" required  name="Email" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Password -: </label>
+    <input type="password" required name="Password" class="form-control" id="exampleInputPassword1">
+  </div>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+</div>
+{% endblock %}
