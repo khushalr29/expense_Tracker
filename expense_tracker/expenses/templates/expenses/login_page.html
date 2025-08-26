@@ -5,19 +5,29 @@
 <div class="container align-center mt-5 ">
     <form class="col-6 mx-auto card p-3 shadow-lg" method="post">
         {% csrf_token %}
+        {% if messages %}
+        {{ message.tags }}
+            <div class="alert alert-danger" role="alert">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+            </div>
+        {% endif %}
+        <h2 class="text-center" style=" color:rgb(174, 64, 252);">Login</h2>
+        <hr>
+
         <div class="mb-3">
             <label for="name" class="form-label">Name :-)</label>
             <input type="text" required name="Name" class="form-control">
         </div>
-  <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">Email address -: </label>
-    <input type="email" required  name="Email" class="form-control">
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">Password -: </label>
-    <input type="password" required name="Password" class="form-control" id="exampleInputPassword1">
-  </div>
-  <button type="submit" class="btn btn-success">Submit</button>
+
+        <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password -: </label>
+        <input type="password" required name="Password" class="form-control" id="exampleInputPassword1">
+        </div>
+
+        <p>New to Expense_Tracker ? <a href="register/" class="no-underline">Sign Up now</a></p>
+        <button type="submit" class="btn btn-outline-warning">Log In</button>
 </form>
 </div>
 {% endblock %}
