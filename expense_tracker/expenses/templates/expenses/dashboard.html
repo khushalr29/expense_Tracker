@@ -9,18 +9,42 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-light">
+{% csrf_token %}  
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'view_expenses' %}">Expense Tracker</a>
-      <div class="d-flex">
+      <a class="navbar-brand" href="#">Expense Tracker DashBoard</a>
+    <form method="get" class="d-flex">
+    <select name="filter_by" class="form-select me-2 bg-secondary text-white navbar-white">
+        <option value="category">Category</option>
+        <option value="amount">Amount</option>
+        <option value="year">Year</option>
+        <option value="month">Month</option>
+        <option value="day">Day</option>
+    </select>
 
-        <a href="/home/" class="btn btn-warning me-2">home</a>
-        <a href="{% url 'view_expenses' %}" class="btn btn-primary me-2">View Expenses</a>
-        <a href="{% url 'view_expenses' %}" class="btn btn-success">+ Add Expense</a>
-      </div>
+    <input type="text" name="query" class="form-control  me-2 bg-secondary" placeholder="Enter search value" >
+
+    <button type="submit" class="btn btn-success me-3">Search</button>
+    </form>
     </div>
+    <div class="d-flex ms-auto">
+    <a href="/home/" class="btn btn-info btn-sm me-2">🏠 Home</a>
+    <a href="/dashboard/" class="btn btn-warning btn-sm me-2">📊 Dashboard</a>
+    <a href="/logout/" class="btn btn-danger btn-sm">👺 LogOut {{ user.username }}</a>
+    </div>
+
   </nav>
 
   <div class="container my-4">

@@ -8,20 +8,40 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-white">
+{% csrf_token %}
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 <nav class="navbar navbar-expand-lg bg-dark "data-bs-theme="dark">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item  p-2">
-          <a class="d-flex btn btn-outline-warning text-white" href="/home/">Home</a>
+          <a class="d-flex btn btn-outline-warning text-white" href="/home/">🏠Home</a>
         </li>
       </ul>
-        <form class="d-flex ms-auto me-5" role="search">
-        <input class="form-control me-3" type="text" name="search" value="{{expense.category}}" placeholder="Search Category .." aria-label="Search"/>
-        <button class="btn btn-outline-success text-white" type="submit">Search</button>
+        <form method="get" class="d-flex">
+            <select name="filter_by" class="form-select me-2">
+                <option value="category">Category</option>
+                <option value="title">Title</option>
+                <option value="amount">Amount</option>
+                <option value="year">Year</option>
+                <option value="month">Month</option>
+                <option value="day">Day</option>
+            </select>
+            <input type="text" name="query" class="form-control me-2" placeholder="Enter search value">
+            <button type="submit" class="btn btn-outline-primary">Search</button>
       </form>
-      <div class="d-flex mb-2 btn btn-outline-info text-white mt-2 mx-5 me-3">{{user.username}}</div>
+      <div class="d-flex mb-2 btn btn-outline-info text-white mt-2 mx-5 me-3">🙋{{user.username}}</div>
       <form class="d-flex p-2">
-        <a href="/logout/" class="btn btn-outline-danger text-white me-3" type="submit">Logout</a>
+        <a href="/logout/" class="btn btn-outline-danger text-white me-3" type="submit">Logout👺</a>
       </form>
     </div>
 </nav>

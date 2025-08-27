@@ -47,24 +47,61 @@ def logout_page(request):
 
 # CREATE & READ
 def view_expenses(request):
-    expenses = Expense.objects.all().order_by('-date')
+    expenses = Expense.objects.filter(user=request.user).order_by('-date')
+
     if request.method == "POST":
         title = request.POST['title']
         amount = request.POST['amount']
         category = request.POST['category']
         date_val = request.POST['date']
         notes = request.POST.get('notes', '')
-        Expense.objects.create(title=title, amount=amount, category=category, date=date_val, notes=notes)
-        return redirect('view_expenses')
-        # for searching Category
-    if request.GET.get('search'):    # print(request.GET.get('search'))
-        expenses = expenses.filter(category__icontains = request.GET.get('search'))
-    context ={'expenses':expenses}
-    return render(request, "expenses/view_expenses.html", context)
 
+        Expense.objects.create(
+            user=request.user,  
+            title=title,
+            amount=amount,
+            category=category,
+            date=date_val,
+            notes=notes
+        )
+        return redirect('view_expenses')
+
+    filter_by = request.GET.get('filter_by')
+    query = request.GET.get('query', '').strip()
+
+    if filter_by and query:
+        try:
+            if filter_by == "category":
+                expenses = expenses.filter(category__icontains=query)
+            elif filter_by == "title":
+                expenses = expenses.filter(title__icontains=query)
+            elif filter_by == "amount":
+                if query.replace('.', '', 1).isdigit():
+                    expenses = expenses.filter(amount=query)
+                else:
+                    messages.error(request, "Please enter a valid number for amount.")
+            elif filter_by == "year":
+                if query.isdigit():
+                    expenses = expenses.filter(date__year=int(query))
+                else:
+                    messages.error(request, " Year must be a number (e.g., 2025).")
+            elif filter_by == "month":
+                if query.isdigit():
+                    expenses = expenses.filter(date__month=int(query))
+                else:
+                    messages.error(request, " Month must be between 1-12.")
+            elif filter_by == "day":
+                if query.isdigit():
+                    expenses = expenses.filter(date__day=int(query))
+                else:
+                    messages.error(request, " Day must be between 1-31.")
+        except Exception:
+            messages.error(request, "Invalid search input.")
+
+    return render(request, "expenses/view_expenses.html", {"expenses": expenses})
 # UPDATE
 def edit_expense(request, id):
-    expense = get_object_or_404(Expense, id=id)
+    expense = get_object_or_404(Expense, id=id, user=request.user) 
     if request.method == "POST":
         expense.title = request.POST['title']
         expense.amount = request.POST['amount']
@@ -75,14 +112,45 @@ def edit_expense(request, id):
         return redirect('view_expenses')
     return render(request, "expenses/edit_expenses.html", {"expense": expense})
 
-# DELETE
+#delete
 def delete_expense(request, id):
-    expense = get_object_or_404(Expense, id=id)
+    expense = get_object_or_404(Expense, id=id,user=request.user)
     expense.delete()
     return redirect('view_expenses')
 
-# DASHBOARD
+
+#dashboard
 def dashboard(request):
-    expenses = Expense.objects.all()
+    expenses = Expense.objects.filter(user=request.user)
+    filter_by = request.GET.get('filter_by')
+    query = request.GET.get('query', '').strip()
+
+    if filter_by and query:
+        try:
+            if filter_by == "category":
+                expenses = expenses.filter(category__icontains=query)
+            elif filter_by == "amount":
+                if query.replace('.', '', 1).isdigit():
+                    expenses = expenses.filter(amount=query)
+                else:
+                    messages.error(request, "Please enter a valid number for amount.")
+            elif filter_by == "year":
+                if query.isdigit():
+                    expenses = expenses.filter(date__year=int(query))
+                else:
+                    messages.error(request, " Year must be a number (e.g., 2025).")
+            elif filter_by == "month":
+                if query.isdigit():
+                    expenses = expenses.filter(date__month=int(query))
+                else:
+                    messages.error(request, " Month must be between 1-12.")
+            elif filter_by == "day":
+                if query.isdigit():
+                    expenses = expenses.filter(date__day=int(query))
+                else:
+                    messages.error(request, " Day must be between 1-31.")
+        except Exception:
+            messages.error(request, "Invalid search input.")
+
     total = sum(exp.amount for exp in expenses)
     return render(request, "expenses/dashboard.html", {"total": total, "expenses": expenses})
